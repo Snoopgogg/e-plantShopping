@@ -1,55 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from './CartSlice.js';
-import { ShoppingCart, Check } from 'lucide-react';
+import { addItem } from './CartSlice.js';
+import './App.css';
 
-export const plants = [
-  { id: 'monstera', name: 'Monstera Deliciosa', category: 'Statement Plants', price: 24, emoji: '🌿', image: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=85', description: 'Bold split leaves for a bright corner.' },
-  { id: 'snake', name: 'Snake Plant', category: 'Easy Care', price: 18, emoji: '🪴', image: 'https://images.unsplash.com/photo-1593482892290-f54927ae2b7b?auto=format&fit=crop&w=800&q=85', description: 'Architectural leaves and an easygoing nature.' },
-  { id: 'pothos', name: 'Golden Pothos', category: 'Trailing Plants', price: 14, emoji: '🍃', image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=85', description: 'A trailing favourite for shelves and hangers.' },
-  { id: 'zz', name: 'ZZ Plant', category: 'Easy Care', price: 22, emoji: '🌱', image: 'https://images.unsplash.com/photo-1632207691143-643e2e4a4d2d?auto=format&fit=crop&w=800&q=85', description: 'Glossy green foliage with minimal fuss.' },
-  { id: 'peace', name: 'Peace Lily', category: 'Flowering Plants', price: 20, emoji: '🌼', image: 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?auto=format&fit=crop&w=800&q=85', description: 'Elegant leaves and graceful white blooms.' },
-  { id: 'rubber', name: 'Rubber Plant', category: 'Statement Plants', price: 26, emoji: '🌳', image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=800&q=85', description: 'Deep green leaves with a polished look.' }
+const plantsArray = [
+  {
+    category: 'Air Purifying Plants',
+    plants: [
+      { name: 'Snake Plant', image: 'https://cdn.pixabay.com/photo/2021/01/22/06/04/snake-plant-5939187_1280.jpg', description: 'Produces oxygen at night, improving air quality.', cost: '$15' },
+      { name: 'Spider Plant', image: 'https://cdn.pixabay.com/photo/2018/07/11/06/47/chlorophytum-3530413_1280.jpg', description: 'Filters formaldehyde and xylene from the air.', cost: '$12' },
+      { name: 'Peace Lily', image: 'https://cdn.pixabay.com/photo/2019/06/12/14/14/peace-lilies-4269365_1280.jpg', description: 'Removes mold spores and purifies the air.', cost: '$18' },
+      { name: 'Boston Fern', image: 'https://cdn.pixabay.com/photo/2020/04/30/19/52/fern-5114339_1280.jpg', description: 'Adds humidity to the air and removes toxins.', cost: '$20' },
+      { name: 'Rubber Plant', image: 'https://cdn.pixabay.com/photo/2020/02/01/05/03/rubber-plant-4809757_1280.jpg', description: 'Easy to grow and removes toxins from the air.', cost: '$17' },
+      { name: 'Aloe Vera', image: 'https://cdn.pixabay.com/photo/2018/04/02/07/42/leaf-3283175_1280.jpg', description: 'Purifies air and has healing properties.', cost: '$14' }
+    ]
+  },
+  {
+    category: 'Aromatic Fragrant Plants',
+    plants: [
+      { name: 'Lavender', image: 'https://images.unsplash.com/photo-1611909023032-2d6b3134ecba?auto=format&fit=crop&w=800&q=80', description: 'Calming scent, great for relaxation.', cost: '$20' },
+      { name: 'Jasmine', image: 'https://images.unsplash.com/photo-1592729645009-b96d1e63d14b?auto=format&fit=crop&w=800&q=80', description: 'Sweet fragrance, promotes restful sleep.', cost: '$18' },
+      { name: 'Rosemary', image: 'https://images.unsplash.com/photo-1515586838455-8f8f940d6853?auto=format&fit=crop&w=800&q=80', description: 'Invigorating scent, also great for cooking.', cost: '$15' },
+      { name: 'Mint', image: 'https://cdn.pixabay.com/photo/2017/07/12/12/23/peppermint-2496773_1280.jpg', description: 'Refreshing aroma, perfect for teas.', cost: '$12' },
+      { name: 'Lemon Balm', image: 'https://cdn.pixabay.com/photo/2019/07/25/18/58/lemon-balm-4363718_1280.jpg', description: 'Citrusy scent that calms the mind.', cost: '$14' },
+      { name: 'Eucalyptus', image: 'https://cdn.pixabay.com/photo/2015/02/06/16/51/eucalyptus-626417_1280.jpg', description: 'Fresh menthol scent, clears sinuses.', cost: '$22' }
+    ]
+  },
+  {
+    category: 'Insect Repellent Plants',
+    plants: [
+      { name: 'Citronella', image: 'https://cdn.pixabay.com/photo/2015/12/09/01/02/greenhouse-1084228_1280.jpg', description: 'Natural mosquito repellent.', cost: '$16' },
+      { name: 'Marigold', image: 'https://cdn.pixabay.com/photo/2022/02/01/11/07/flower-6986274_1280.jpg', description: 'Repels mosquitoes and other insects.', cost: '$10' },
+      { name: 'Basil', image: 'https://cdn.pixabay.com/photo/2016/01/13/15/48/basil-1138920_1280.jpg', description: 'Repels flies and mosquitoes.', cost: '$12' },
+      { name: 'Catnip', image: 'https://cdn.pixabay.com/photo/2015/07/05/13/44/cat-832259_1280.jpg', description: 'Repels insects, loved by cats.', cost: '$13' },
+      { name: 'Chrysanthemum', image: 'https://cdn.pixabay.com/photo/2019/10/10/17/49/chrysanthemum-4539247_1280.jpg', description: 'Contains natural insecticide pyrethrin.', cost: '$18' },
+      { name: 'Lemongrass', image: 'https://cdn.pixabay.com/photo/2015/01/13/16/39/lemongrass-598653_1280.jpg', description: 'Strong citrus scent deters mosquitoes.', cost: '$15' }
+    ]
+  }
 ];
 
-export default function ProductList() {
+function ProductList() {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => state.cart.items);
-  const categories = [...new Set(plants.map(plant => plant.category))];
+  const [addedToCart, setAddedToCart] = useState({});
+
+  const handleAddToCart = (plant) => {
+    dispatch(addItem(plant));
+    setAddedToCart(prev => ({ ...prev, [plant.name]: true }));
+  };
 
   return (
-    <section className="catalog-section" id="plants">
-      <div className="section-heading">
-        <div><div className="section-kicker">THE GREENHOUSE</div><h2>Find your new favourite.</h2></div>
-        <p>Six leafy companions to brighten your everyday.</p>
-      </div>
-      {categories.map(category => (
-        <div className="plant-category" key={category}>
-          <h3>{category}</h3>
-          <div className="plant-grid">
-            {plants.filter(plant => plant.category === category).map(plant => {
-              const added = cartItems.some(item => item.id === plant.id);
-              return (
-                <article className="plant-card" key={plant.id}>
-                  <div className="plant-photo">
-                    <img src={plant.image} alt={plant.name} loading="lazy" onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement.classList.add('photo-fallback'); }} />
-                    <span className="plant-emoji" aria-hidden="true">{plant.emoji}</span>
-                  </div>
-                  <div className="plant-info">
-                    <span className="plant-category-label">{plant.category}</span>
-                    <h4>{plant.name}</h4><p>{plant.description}</p>
-                    <div className="plant-buy"><strong>${plant.price.toFixed(2)}</strong>
-                      <button className="button button-small" disabled={added} onClick={() => dispatch(addToCart(plant))}>
-                        {added ? <><Check size={15}/> Added</> : <><ShoppingCart size={15}/> Add to Cart</>}
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+    <div className="product-list">
+      <h1 style={{ textAlign: 'center', margin: '20px 0' }}>Our Plants</h1>
+      {plantsArray.map((category, index) => (
+        <div key={index}>
+          <h2 className="category-title">{category.category}</h2>
+          <div className="product-grid">
+            {category.plants.map((plant, plantIndex) => (
+              <div className="product-card" key={plantIndex}>
+                <img src={plant.image} alt={plant.name} />
+                <h3>{plant.name}</h3>
+                <p>{plant.description}</p>
+                <p className="price">{plant.cost}</p>
+                <button
+                  disabled={addedToCart[plant.name]}
+                  onClick={() => handleAddToCart(plant)}
+                >
+                  {addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       ))}
-    </section>
+    </div>
   );
 }
+
+export default ProductList;

@@ -1,21 +1,30 @@
 import React from 'react';
-import { Leaf, HeartHandshake, Sprout } from 'lucide-react';
 
-export default function AboutUs() {
+function AboutUs() {
   return (
-    <section className="about-section" id="about">
-      <div className="section-kicker">OUR ROOTS</div>
-      <h2>Plants make a place feel like home.</h2>
-      <p className="about-lead">
-        Paradise Nursery helps you bring the calm and character of nature indoors.
-        We curate approachable houseplants for first-time plant parents and experienced
-        collectors alike.
+    <div className="about-us-container">
+      <h1>About Us</h1>
+      <h2>Welcome to Paradise Nursery</h2>
+      <p>
+        At Paradise Nursery, we are passionate about bringing nature closer to you.
+        Our mission is to provide the highest quality houseplants that not only beautify
+        your living spaces but also contribute to a healthier and more sustainable lifestyle.
       </p>
-      <div className="values-grid">
-        <article className="value-card"><Leaf size={25}/><h3>Thoughtfully chosen</h3><p>Popular, versatile plants selected to suit a range of spaces.</p></article>
-        <article className="value-card"><HeartHandshake size={25}/><h3>Helpful guidance</h3><p>Clear product details help you choose a plant that fits your routine.</p></article>
-        <article className="value-card"><Sprout size={25}/><h3>Grow at your pace</h3><p>Start small, learn as you go, and build your own green corner.</p></article>
-      </div>
-    </section>
+      <p>
+        Founded with a love for greenery and sustainable living, Paradise Nursery is your
+        one-stop destination for a wide variety of plants. Whether you're a seasoned plant
+        parent or just starting your green journey, we have something for everyone.
+      </p>
+      <p>
+        We believe that plants have the power to transform any space, purify the air,
+        and boost your mood. Our carefully curated collection includes everything from
+        low-maintenance succulents to stunning tropical plants.
+      </p>
+      <p>
+        Join us in our mission to make the world a greener place, one plant at a time.
+      </p>
+    </div>
   );
 }
+
+export default AboutUs;
